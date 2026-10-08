@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "PaperChat",
+  "version": "0.1.3",
+  "description": "Read papers with a chat sidebar. Uses your ChatGPT plan and saves only conversation history and source links.",
+  "permissions": ["activeTab", "scripting", "nativeMessaging", "storage", "contextMenus"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "background": {"scripts": ["background.js"]},
+  "action": {"default_title": "Ask PaperChat about this page", "default_icon": "icons/icon-64.png"},
+  "icons": {"64": "icons/icon-64.png", "128": "icons/icon-128.png", "256": "icons/icon-256.png"},
+  "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none';"}
+}
