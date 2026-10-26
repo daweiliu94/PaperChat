@@ -6,15 +6,17 @@ PaperChat's own source is MIT licensed. You can inspect, modify and redistribute
 
 ## Download and get started
 
-The [V1.0 release](https://github.com/daweiliu94/PaperChat/releases/tag/V1.0) contains the prebuilt app and its SHA-256 checksum. The native app requires **an Apple Silicon Mac and macOS 14 or newer**. Use current Safari: this build was tested on **Safari 27**. Safari below 26.4 is unsupported because the PDF reader uses newer JavaScript APIs; older-than-tested versions still need beta testing. The ZIP also contains third-party notices and the source archive for its bundled Liberation fonts. Keep these with redistributed packages. You do not need Xcode, an API key or your own signing certificate to use the prebuilt app.
+The [0.1.4 release](https://github.com/daweiliu94/PaperChat/releases/tag/v0.1.4) contains the prebuilt app and its SHA-256 checksum. The native app requires **an Apple Silicon Mac and macOS 14 or newer**. Use current Safari: the original live tests used **Safari 27**. Safari below 26.4 is unsupported because the PDF reader uses newer JavaScript APIs; older-than-tested versions still need beta testing. The ZIP also contains third-party notices and the source archive for its bundled Liberation fonts. Keep these with redistributed packages. You do not need Xcode, an API key or your own signing certificate to use the prebuilt app.
 
 This is a development beta. Safari requires **Allow unsigned extensions**, which resets when Safari quits. macOS may require a one-time approval in Privacy & Security before the downloaded app can run. Keep those protections enabled and approve the app through the normal system dialogs.
 
 For help from Codex, paste:
 
-> Inspect https://github.com/daweiliu94/PaperChat and read CODEX_SETUP.md. Download the prebuilt V1.0 release, verify its checksum, and help me install and register PaperChat in Safari. Keep normal startup quiet. Guide me through the required macOS/Safari approvals, choosing my own local history folder and connecting my own ChatGPT account.
+> Inspect https://github.com/daweiliu94/PaperChat/tree/v0.1.4 and read CODEX_SETUP.md at that tag. Download the prebuilt v0.1.4 release, verify its checksum, and help me install and register PaperChat in Safari. Keep normal startup quiet. Guide me through the required macOS/Safari approvals, choosing my own local history folder and connecting my own ChatGPT account.
 
 See [CODEX_SETUP.md](CODEX_SETUP.md) for the installation steps. The helper starts quietly on demand. **Chat options (⋯) → Setup** explicitly opens its configuration window; closing it returns the helper to quiet operation. Keep PaperChat.app installed because it provides Keychain login and history-folder access.
+
+If you prefer Chrome, [CODEX_CHROME.md](CODEX_CHROME.md) provides a Codex task prompt for generating a Chrome version from this source. The downloadable 0.1.4 app supports Safari; a Chrome extension and native messaging host still need to be implemented, reviewed and tested locally.
 
 Each user connects their own eligible ChatGPT Plus or Pro account. Usage follows that account's allowance; review credit-overage settings through Manage usage. PaperChat has no separate subscription fee. [Official OpenAI documentation](https://developers.openai.com/siwc/quickstart) explains account eligibility and plan usage.
 
@@ -44,4 +46,6 @@ python3 scripts/test-sandbox-peers.py
 
 **`npm run build` also replaces `/Applications/PaperChat.app`, registers its extension and writes `../../outputs/PaperChat.zip`.** Run it only when you intend to install your modified build, after preserving a rollback package and ensuring PaperChat is idle. The sandbox-peer check also refreshes generated signing/Xcode configuration and uses disposable signed fixtures.
 
-V1.0 is the requested GitHub milestone for the current working implementation. Its embedded app/package version remains **0.1.3/build 4**. JavaScript tests, strict typecheck, native tests and sandboxed peer checks pass; earlier live Safari 27 verification covered synthetic article/PDF reading, saved-chat restoration, reasoning, citations and History navigation. Installation on another Mac and older Safari versions remain beta-test steps.
+The **v0.1.4** release publishes the existing **0.1.4/build 5** app unchanged, including visible-viewport docking and stream replay suppression. Its ZIP SHA-256 is `56cd4209365adffe910c5f0b01d3f9f2e9ed2562a7ec4dbf000e1ffd51c030b2`. The earlier V1.0 milestone remains available with version 0.1.3/build 4.
+
+JavaScript, strict typecheck, disposable native and sandboxed peer checks cover this source. Synthetic browser checks cover the layout and stream replay fixes. Earlier live Safari 27 verification covered article/PDF reading, saved-chat restoration, reasoning, citations and History navigation; the latest authenticated Safari streaming path and installation on a fresh Mac have not been exercised. See [RELEASE_NOTES.md](RELEASE_NOTES.md) for scope and limitations.

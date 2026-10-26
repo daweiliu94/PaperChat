@@ -3,6 +3,7 @@ import { Block, Paper, digest, sourceURL } from './core';
 import { ChatPanel } from './panel';
 import { bindReaderTab } from './client';
 import { chooseRegion, cropImage } from './crop';
+import { dockPanel } from './layout';
 
 GlobalWorkerOptions.workerSrc = browser.runtime.getURL('pdf.worker.mjs');
 const el = (id: string) => document.getElementById(id)!;
@@ -13,6 +14,7 @@ let source = '', scale = 1, width = 400, owner: number | undefined;
 let generation = 0, lastSelection = '', observer: IntersectionObserver | null = null;
 let loadGeneration = 0, downloading: AbortController | null = null;
 let viewGeneration = 0;
+let placement: ReturnType<typeof dockPanel> | null = null;
 type PageText = Awaited<ReturnType<Awaited<ReturnType<PDFDocumentProxy['getPage']>>['getTextContent']>>;
 let textByPage = new Map<number, PageText>();
 const renderTasks = new Set<{ cancel: () => void }>();
@@ -117,11 +119,20 @@ function showChat() {
       const crop = { x: Math.max(rect.x, bounds.left) - bounds.left, y: Math.max(rect.y, bounds.top) - bounds.top,
         width: Math.min(rect.x + rect.width, bounds.right) - Math.max(rect.x, bounds.left), height: Math.min(rect.y + rect.height, bounds.bottom) - Math.max(rect.y, bounds.top) };
       return cropImage(canvas.toDataURL('image/png'), crop, bounds.width, 'Figure from PDF page ' + wrap.id.replace('pdf-page-', ''));
-    }, close: () => { panel?.element.remove(); panel = null; el('app').style.gridTemplateColumns = 'minmax(0,1fr) 0'; el('divider').style.display = 'none'; el('show-chat').style.display = 'inline-block'; }
+    }, close: () => { panel?.element.remove(); panel = null; placement = null; el('app').style.gridTemplateColumns = 'minmax(0,1fr) 0'; el('divider').style.display = 'none'; el('show-chat').style.display = 'inline-block'; }
   });
-  el('chat-host').append(panel.element); panel.element.style.height = '100%';
-  el('app').style.gridTemplateColumns = `minmax(0,1fr) ${width}px`; el('divider').style.display = ''; el('show-chat').style.display = 'none';
+  el('chat-host').append(panel.element);
+  layout(); el('divider').style.display = ''; el('show-chat').style.display = 'none';
 }
+function layout() {
+  if (!panel) return;
+  placement = dockPanel(panel.element, width);
+  el('app').style.gridTemplateColumns = `minmax(0,1fr) ${placement.width}px`;
+  Object.assign(el('divider').style, { right: placement.right + placement.width - 3 + 'px', top: placement.top + 'px', bottom: 'auto', height: placement.height + 'px' });
+}
+window.addEventListener('resize', layout);
+window.visualViewport?.addEventListener('resize', layout);
+window.visualViewport?.addEventListener('scroll', layout);
 function jump(n: number) { if (!pdf) return; n = Math.max(1, Math.min(n, pdf.numPages)); el('pdf-page-' + n)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); pageInput.value = String(n); if (paper) paper.currentPage = n; panel?.updateSource(); }
 async function loadURL(requestPermission: boolean, initialSource?: string) {
   const load = ++loadGeneration; downloading?.abort(); downloading = new AbortController(); const signal = downloading.signal;
@@ -162,7 +173,7 @@ async function zoom(delta: number) {
 }
 el('zoom-out').onclick = () => handle(() => zoom(-0.15)); el('zoom-in').onclick = () => handle(() => zoom(0.15));
 const divider = el('divider'); divider.onpointerdown = event => { divider.setPointerCapture(event.pointerId); event.preventDefault(); };
-divider.onpointermove = event => { if (!divider.hasPointerCapture(event.pointerId)) return; width = Math.max(320, Math.min(600, window.innerWidth - event.clientX)); el('app').style.gridTemplateColumns = `minmax(0,1fr) ${width}px`; divider.style.right = width - 3 + 'px'; };
+divider.onpointermove = event => { if (!divider.hasPointerCapture(event.pointerId) || !placement) return; width = (placement.edge - event.clientX) / placement.scale; layout(); };
 document.addEventListener('selectionchange', () => { const value = window.getSelection()?.toString().trim(); if (value) lastSelection = value; });
 browser.runtime.onMessage.addListener((message: any) => { if (message.type === 'paperchat.reader-toggle' && message.tabId === owner) { if (message.selection) { showChat(); panel?.useSelection(message.selection); } else if (panel) void panel.close(); else showChat(); } });
 handle(async () => {

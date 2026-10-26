@@ -137,7 +137,7 @@ import Security
     }
     nonisolated private static func emit(id: String, event: [String: Any]) {
         SFSafariApplication.dispatchMessage(withName: "paperchat.event", toExtensionWithIdentifier: paperChatExtensionID,
-            userInfo: ["requestId": id, "event": event]) { _ in }
+            userInfo: ["requestId": id, "event": identifiedStreamEvent(event)]) { _ in }
     }
 }
 

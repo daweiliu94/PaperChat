@@ -2,6 +2,7 @@ import { extractPaper } from './extract';
 import { native } from './client';
 import { ChatPanel } from './panel';
 import { cropImage, chooseRegion } from './crop';
+import { dockPanel } from './layout';
 
 const key = '__paperchatInstalled';
 const scope = globalThis as any;
@@ -15,21 +16,23 @@ if (!scope[key]) {
   const html = document.documentElement;
   let originalWidth = '', originalPriority = '';
   let resize: HTMLDivElement | null = null;
+  let placement: ReturnType<typeof dockPanel> | null = null;
   const selected = () => window.getSelection()?.toString().trim() || lastSelection;
   document.addEventListener('selectionchange', () => { const text = window.getSelection()?.toString().trim(); if (text) lastSelection = text; });
   const read = async () => { const result = await extractPaper(document); references = result.references; return result.paper; };
   const restore = () => {
     if (originalWidth) html.style.setProperty('width', originalWidth, originalPriority); else html.style.removeProperty('width');
-    resize?.remove(); resize = null; panel?.element.remove(); panel = null;
+    resize?.remove(); resize = null; panel?.element.remove(); panel = null; placement = null;
   };
   const layout = () => {
     if (!panel) return;
-    width = Math.max(320, Math.min(width, 600, Math.max(320, window.innerWidth - 300)));
-    panel.element.style.width = width + 'px';
-    html.style.setProperty('width', `calc(100% - ${width}px)`, 'important');
-    if (resize) resize.style.right = width - 3 + 'px';
+    placement = dockPanel(panel.element, width);
+    html.style.setProperty('width', `calc(100% - ${placement.width}px)`, 'important');
+    if (resize) Object.assign(resize.style, { right: placement.right + placement.width - 3 + 'px', top: placement.top + 'px', height: placement.height + 'px' });
   };
   window.addEventListener('resize', layout);
+  window.visualViewport?.addEventListener('resize', layout);
+  window.visualViewport?.addEventListener('scroll', layout);
   browser.runtime.onMessage.addListener(async (message: any) => {
     if (message.type === 'paperchat.document') return { documentToken };
     if (message.type !== 'paperchat.toggle') return;
@@ -57,12 +60,12 @@ if (!scope[key]) {
         } finally { current.element.style.visibility = ''; if (resize) resize.style.visibility = ''; }
       }, close: restore
     });
-    Object.assign(panel.element.style, { position: 'fixed', right: '0', top: '0', bottom: '0', height: '100vh', zIndex: '2147483646' });
+    panel.element.style.zIndex = '2147483646';
     html.append(panel.element);
     resize = document.createElement('div'); resize.dataset.paperchat = 'resize';
-    Object.assign(resize.style, { position: 'fixed', top: '0', bottom: '0', width: '7px', cursor: 'col-resize', zIndex: '2147483647', background: 'transparent' });
+    Object.assign(resize.style, { all: 'initial', position: 'fixed', width: '7px', cursor: 'col-resize', zIndex: '2147483647', background: 'transparent' });
     resize.onpointerdown = event => { resize!.setPointerCapture(event.pointerId); event.preventDefault(); };
-    resize.onpointermove = event => { if (resize?.hasPointerCapture(event.pointerId)) { width = window.innerWidth - event.clientX; layout(); } };
+    resize.onpointermove = event => { if (resize?.hasPointerCapture(event.pointerId) && placement) { width = (placement.edge - event.clientX) / placement.scale; layout(); } };
     html.append(resize); layout();
     if (message.selection) panel.useSelection(message.selection);
     return { ok: true };

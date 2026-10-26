@@ -224,7 +224,7 @@ actor ChatGPTService {
             try Task.checkCancellation()
             if let event = try parser.consume(byte) {
                 let kind = event["type"] as? String ?? ""
-                if kind == "response.output_text.delta", let delta = event["delta"] as? String { onEvent(["type": "delta", "text": delta]) }
+                if kind == "response.output_text.delta", let delta = event["delta"] as? String { onEvent(identifiedStreamEvent(["type": "delta", "text": delta], sequence: event["sequence_number"] as? Int)) }
                 else if kind == "response.completed" { onEvent(["type": "completed"]); return }
                 else if kind == "error" || kind == "response.failed" || kind == "response.incomplete" {
                     let value = event["response"] as? [String: Any] ?? event
@@ -303,4 +303,13 @@ struct SSEByteParser {
         guard line.count <= 2_000_000 else { throw PCError.message("The streamed response line exceeded the size limit.") }
         return nil
     }
+}
+
+// Preserve upstream identity across replays; assign one before Safari delivery otherwise.
+func identifiedStreamEvent(_ event: [String: Any], sequence: Int? = nil) -> [String: Any] {
+    var identified = event
+    if identified["eventId"] == nil {
+        identified["eventId"] = sequence.map { "response:\($0)" } ?? UUID().uuidString
+    }
+    return identified
 }

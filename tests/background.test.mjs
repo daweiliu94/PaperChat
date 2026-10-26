@@ -240,3 +240,19 @@ test('reader reload during source consumption retains its binding but closing re
     else { assert.equal(fresh.readerTab, 2); assert.equal(fresh.source, ''); }
   }
 });
+
+test('replayed native events are forwarded and recovered once per request', async () => {
+  const f = fixture({ missingReceiver: true });
+  for (const id of ['first-request', 'second-request']) {
+    const recovery = { action: 'saveHistory', expectedRevision: id === 'first-request' ? 'version-1' : 'version-3', paper: { id: 'a'.repeat(64) }, messages: [{ role: 'assistant', text: '', state: 'incomplete' }] };
+    await f.listeners.rpc({ type: 'paperchat.native', payload: { action: 'chat', requestId: id, body: {}, recovery } }, historySender);
+    for (const eventId of ['1', '2']) {
+      const message = { requestId: id, event: { type: 'delta', eventId, text: 'very ' } };
+      await f.listeners.native(message); await f.listeners.native(structuredClone(message));
+    }
+  }
+  const saved = f.calls.filter(call => call.action === 'saveHistory');
+  assert.equal(saved.length, 4);
+  assert.equal(saved.at(-1).messages[0].text, 'very very ');
+  assert.equal(f.tabCalls.filter(call => call.message?.type === 'paperchat.event').length, 4);
+});

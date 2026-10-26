@@ -128,6 +128,14 @@ func integerComponents(_ der: Data) -> (Data, Data) {
         try rejects({ _ = try JWTValidator.validate(String(jwt.dropLast(10)) + "AAAAAAAAAA", clientID: "issued-client", nonce: "fixture-nonce", jwks: jwks) }, "tampered signature rejected")
         print("PASS: OAuth state, callback shape, encoding, randomness and RSA identity validation")
 
+        let delta: [String: Any] = ["type": "delta", "text": "very "]
+        let identified = identifiedStreamEvent(delta, sequence: 10)
+        try check(identified["eventId"] as? String == identifiedStreamEvent(delta, sequence: 10)["eventId"] as? String, "upstream replays retain event identity")
+        try check(identified["eventId"] as? String != identifiedStreamEvent(delta, sequence: 11)["eventId"] as? String, "intentional identical chunks retain separate identities")
+        try check(identifiedStreamEvent(identified)["eventId"] as? String == identified["eventId"] as? String, "Safari forwarding preserves upstream identity")
+        let unsequenced = identifiedStreamEvent(delta)
+        try check(unsequenced["eventId"] as? String != identifiedStreamEvent(delta)["eventId"] as? String, "unsequenced events get distinct delivery identities")
+
         let server = try NWListener(using: .tcp, on: .any)
         let eventText = "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"delta\":\"A fixture answer\"}\n\nevent: response.completed\ndata: {\"type\":\"response.completed\"}\n\n"
         server.newConnectionHandler = { connection in

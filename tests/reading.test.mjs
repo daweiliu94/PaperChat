@@ -295,3 +295,20 @@ test('Stop during a pending draft save never starts inference', async () => {
     assert.equal(f.calls.some(call => call.action === 'chat'), false);
   } finally { f.releaseDraft(); f.dom.window.close(); }
 });
+
+test('replayed stream events render and save once while distinct repeated words are preserved', async () => {
+  const f = fixture();
+  try {
+    const root = await f.open(); root.getElementById('question').value = 'Explain'; root.getElementById('send').click();
+    await until(() => f.calls.some(call => call.action === 'chat'));
+    const chat = f.calls.find(call => call.action === 'chat');
+    for (const [eventId, text] of [['1', 'Very'], ['2', ' very'], ['3', ' clear.']]) {
+      const message = { type: 'paperchat.event', requestId: chat.requestId, event: { type: 'delta', eventId, text } };
+      f.emit(message); f.emit(structuredClone(message));
+    }
+    f.emit({ type: 'paperchat.event', requestId: chat.requestId, event: { type: 'completed', eventId: '4' } });
+    await until(() => f.calls.filter(call => call.action === 'saveHistory').length === 2);
+    assert.equal(root.querySelector('.answer').textContent.trim(), 'Very very clear.');
+    assert.equal(f.calls.filter(call => call.action === 'saveHistory').at(-1).messages[1].text, 'Very very clear.');
+  } finally { f.dom.window.close(); }
+});

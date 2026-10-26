@@ -117,13 +117,13 @@
 				<key>CODE_SIGN_ENTITLEMENTS</key>
 				<string>PaperChat Extension/PaperChat.entitlements</string>
 				<key>MARKETING_VERSION</key>
-				<string>0.1.3</string>
-				<key>INFOPLIST_FILE</key>
-				<string>PaperChat Extension/Info.plist</string>
+				<string>0.1.4</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
 				<key>DEVELOPMENT_TEAM</key>
 				<string>J563PHX5TG</string>
 				<key>CURRENT_PROJECT_VERSION</key>
-				<string>4</string>
+				<string>5</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
 				<string>local.paperchat.PaperChat.Extension</string>
 				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
@@ -165,8 +165,8 @@
 				<string>YES</string>
 				<key>ENABLE_USER_SELECTED_FILES</key>
 				<string>readonly</string>
-				<key>SWIFT_EMIT_LOC_STRINGS</key>
-				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>PaperChat Extension/Info.plist</string>
 				<key>GENERATE_INFOPLIST_FILE</key>
 				<string>YES</string>
 			</dict>
@@ -223,13 +223,13 @@
 				<key>CODE_SIGN_ENTITLEMENTS</key>
 				<string>PaperChat Extension/PaperChat.entitlements</string>
 				<key>MARKETING_VERSION</key>
-				<string>0.1.3</string>
-				<key>INFOPLIST_FILE</key>
-				<string>PaperChat Extension/Info.plist</string>
+				<string>0.1.4</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
 				<key>DEVELOPMENT_TEAM</key>
 				<string>J563PHX5TG</string>
 				<key>CURRENT_PROJECT_VERSION</key>
-				<string>4</string>
+				<string>5</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
 				<string>local.paperchat.PaperChat.Extension</string>
 				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
@@ -271,8 +271,8 @@
 				<string>YES</string>
 				<key>ENABLE_USER_SELECTED_FILES</key>
 				<string>readonly</string>
-				<key>SWIFT_EMIT_LOC_STRINGS</key>
-				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>PaperChat Extension/Info.plist</string>
 				<key>GENERATE_INFOPLIST_FILE</key>
 				<string>YES</string>
 			</dict>
@@ -730,7 +730,7 @@
 				<key>CODE_SIGN_ENTITLEMENTS</key>
 				<string>PaperChat/PaperChat.entitlements</string>
 				<key>MARKETING_VERSION</key>
-				<string>0.1.3</string>
+				<string>0.1.4</string>
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
 				<key>DEVELOPMENT_TEAM</key>
@@ -740,7 +740,7 @@
 				<key>REGISTER_APP_GROUPS</key>
 				<string>YES</string>
 				<key>CURRENT_PROJECT_VERSION</key>
-				<string>4</string>
+				<string>5</string>
 				<key>SWIFT_DEFAULT_ACTOR_ISOLATION</key>
 				<string>MainActor</string>
 				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
@@ -753,8 +753,8 @@
 				<string>PaperChat</string>
 				<key>MACOSX_DEPLOYMENT_TARGET</key>
 				<string>14.0</string>
-				<key>SWIFT_EMIT_LOC_STRINGS</key>
-				<string>YES</string>
+				<key>ENABLE_USER_SELECTED_FILES</key>
+				<string>readonly</string>
 				<key>INFOPLIST_KEY_NSPrincipalClass</key>
 				<string>NSApplication</string>
 				<key>INFOPLIST_KEY_NSMainStoryboardFile</key>
@@ -791,10 +791,10 @@
 				<string>YES</string>
 				<key>CODE_SIGN_IDENTITY</key>
 				<string>A4249486A91AE04B249F05DE5A17D2DC1298A678</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
 				<key>ENABLE_HARDENED_RUNTIME</key>
 				<string>YES</string>
-				<key>ENABLE_USER_SELECTED_FILES</key>
-				<string>readonly</string>
 				<key>INFOPLIST_FILE</key>
 				<string>PaperChat/Info.plist</string>
 				<key>GENERATE_INFOPLIST_FILE</key>
@@ -812,7 +812,7 @@
 				<key>CODE_SIGN_ENTITLEMENTS</key>
 				<string>PaperChat/PaperChat.entitlements</string>
 				<key>MARKETING_VERSION</key>
-				<string>0.1.3</string>
+				<string>0.1.4</string>
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
 				<key>DEVELOPMENT_TEAM</key>
@@ -822,7 +822,7 @@
 				<key>REGISTER_APP_GROUPS</key>
 				<string>YES</string>
 				<key>CURRENT_PROJECT_VERSION</key>
-				<string>4</string>
+				<string>5</string>
 				<key>SWIFT_DEFAULT_ACTOR_ISOLATION</key>
 				<string>MainActor</string>
 				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
@@ -835,8 +835,8 @@
 				<string>PaperChat</string>
 				<key>MACOSX_DEPLOYMENT_TARGET</key>
 				<string>14.0</string>
-				<key>SWIFT_EMIT_LOC_STRINGS</key>
-				<string>YES</string>
+				<key>ENABLE_USER_SELECTED_FILES</key>
+				<string>readonly</string>
 				<key>INFOPLIST_KEY_NSPrincipalClass</key>
 				<string>NSApplication</string>
 				<key>INFOPLIST_KEY_NSMainStoryboardFile</key>
@@ -873,10 +873,10 @@
 				<string>YES</string>
 				<key>CODE_SIGN_IDENTITY</key>
 				<string>A4249486A91AE04B249F05DE5A17D2DC1298A678</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
 				<key>ENABLE_HARDENED_RUNTIME</key>
 				<string>YES</string>
-				<key>ENABLE_USER_SELECTED_FILES</key>
-				<string>readonly</string>
 				<key>INFOPLIST_FILE</key>
 				<string>PaperChat/Info.plist</string>
 				<key>GENERATE_INFOPLIST_FILE</key>

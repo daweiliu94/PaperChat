@@ -32,7 +32,7 @@ for target, directory in [(app, 'PaperChat'), (extension, 'PaperChat Extension')
     configurations = objects[target['buildConfigurationList']]['buildConfigurations']
     for config in configurations:
         settings = objects[config]['buildSettings']
-        settings.update({'CODE_SIGN_STYLE': 'Manual', 'CODE_SIGN_IDENTITY': signing['identity'], 'DEVELOPMENT_TEAM': signing['team'], 'CODE_SIGN_ENTITLEMENTS': directory + '/PaperChat.entitlements', 'SWIFT_VERSION': '5.0', 'MACOSX_DEPLOYMENT_TARGET': '14.0', 'ENABLE_APP_SANDBOX': 'YES', 'PRODUCT_BUNDLE_IDENTIFIER': 'local.paperchat.PaperChat' + ('.Extension' if target is extension else ''), 'MARKETING_VERSION': '0.1.3', 'CURRENT_PROJECT_VERSION': '4'})
+        settings.update({'CODE_SIGN_STYLE': 'Manual', 'CODE_SIGN_IDENTITY': signing['identity'], 'DEVELOPMENT_TEAM': signing['team'], 'CODE_SIGN_ENTITLEMENTS': directory + '/PaperChat.entitlements', 'SWIFT_VERSION': '5.0', 'MACOSX_DEPLOYMENT_TARGET': '14.0', 'ENABLE_APP_SANDBOX': 'YES', 'PRODUCT_BUNDLE_IDENTIFIER': 'local.paperchat.PaperChat' + ('.Extension' if target is extension else ''), 'MARKETING_VERSION': '0.1.4', 'CURRENT_PROJECT_VERSION': '5'})
     entitlements = {'com.apple.security.app-sandbox': True, 'com.apple.security.network.client': True, 'com.apple.security.application-groups': [group]}
     if target is app:
         entitlements.update({'com.apple.security.network.server': True, 'com.apple.security.files.user-selected.read-write': True, 'com.apple.security.files.bookmarks.app-scope': True})

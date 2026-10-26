@@ -1,6 +1,6 @@
 import { NativeReply, historyPayload, sourceURL } from './core';
 
-interface Route { tab: number; reader: boolean; recovery?: ReturnType<typeof historyPayload> & { expectedRevision: string }; recoveryChain?: Promise<void> }
+interface Route { seenEvents?: Set<string>; tab: number; reader: boolean; recovery?: ReturnType<typeof historyPayload> & { expectedRevision: string }; recoveryChain?: Promise<void> }
 const routes = new Map<string, Route>();
 interface ReaderSource { tab?: number; source?: string }
 const readerSources = new Map<string, ReaderSource>();
@@ -175,6 +175,11 @@ function nativePort() {
       const id = payload.requestId; const event = payload.event;
       const route = routes.get(id);
       if (!route || !event) return;
+      if (typeof event.eventId === 'string') {
+        const seen = route.seenEvents ??= new Set<string>();
+        if (seen.has(event.eventId)) return;
+        seen.add(event.eventId);
+      }
       if (event.type === 'delta' && route.recovery?.messages.at(-1)?.role === 'assistant') route.recovery.messages.at(-1)!.text += event.text;
       try { await publish(route, { type: 'paperchat.event', requestId: id, event }); }
       catch { await preserve(route, event.type === 'completed' ? 'complete' : 'incomplete'); }
